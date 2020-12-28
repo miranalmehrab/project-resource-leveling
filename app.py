@@ -16,7 +16,7 @@ def main():
     cpm.mark_critical_nodes_in_network()
     cpm.print_node_matrix()
 
-    ==== Estimated Method ===== #
+    # ==== Estimated Method ===== #
     node_matrix = cpm.get_node_matrix()
     estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
 

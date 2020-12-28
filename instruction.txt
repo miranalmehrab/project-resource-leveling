@@ -1,0 +1,14 @@
+Input Structure of CPM
+-----------------------
+
+Activity name, Duration, Predecessors(multiple Predecessors are semicolon separated), Resource
+
+
+Output Structure of CPM
+------------------------
+A list of Activity-information-dictionary
+e.g.
+[ {'id': 10, 'name': 'J', 'duration': '2', 'resource': '4', 'predecessor': ['E', 'F'], 'descendant': ['N'], 
+ 'slack': 8, 'critical': False, 'ES': 8, 'LS': 16, 'EF': 10, 'LF': 18, 'OS': 0, 'OF': 0, 'FP': True, 'BP': True},
+ {'id': 2, ...},
+ {'id': 5, ...} ] 
