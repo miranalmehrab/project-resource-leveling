@@ -9,7 +9,7 @@ def main():
     cpm.calculate_start_node()
     cpm.forward_pass_of_the_network()
     
-    cpm.find_ancestors_of_node()
+    cpm.find_descendants_of_node()
     cpm.backward_pass_of_the_network()
     
     cpm.calculate_slack_time_of_the_nodes()
