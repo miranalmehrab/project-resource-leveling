@@ -10,7 +10,7 @@ class CPM:
         global node_matrix
 
         node_counter = 1
-        fp = open('input2.txt', 'r')
+        fp = open('input.txt', 'r')
 
         for line in fp.readlines():
             comma_splitted_line = line.split(',')
@@ -18,10 +18,10 @@ class CPM:
             node = {}
             node['id'] = node_counter 
             node['name'] = comma_splitted_line[0]
-            node['predecessor'] = comma_splitted_line[1].strip().split(';')
-            node['ancestor'] = []
-            node['duration'] = comma_splitted_line[2].strip()
+            node['duration'] = comma_splitted_line[1].strip()
             node['resource'] = comma_splitted_line[3].strip()
+            node['predecessor'] = comma_splitted_line[2].strip().split(';')
+            node['descendant'] = []
             node['slack'] = 0
             node['critical'] = False
             node['ES'] = 0
@@ -53,7 +53,7 @@ class CPM:
 
         return True
 
-    def get_max_predecessor_ef_value(self, predecessors):
+    def get_predecessors_max_ef_value(self, predecessors):
         predecessor_ef_values = []
 
         for predecessor in predecessors:
@@ -82,7 +82,7 @@ class CPM:
         while True:
             for node in node_matrix:
                 if node['FP'] is False and self.check_if_fp_is_true_for_all_predecessors(node['predecessor']):
-                    node['ES'] = self.get_max_predecessor_ef_value(node['predecessor']) 
+                    node['ES'] = self.get_predecessors_max_ef_value(node['predecessor']) 
                     node['EF'] = int(node['ES']) + int(node['duration'])
                     node['FP'] = True
 
@@ -96,35 +96,35 @@ class CPM:
 
         
 
-    def find_ancestors_of_node(self):
+    def find_descendants_of_node(self):
         global node_matrix
 
         for predecessor_node in node_matrix:
-            for ancestor_node in node_matrix:
-                if predecessor_node['name'] in ancestor_node['predecessor']:
-                    predecessor_node['ancestor'].append(ancestor_node['name'])
+            for descendant_node in node_matrix:
+                if predecessor_node['name'] in descendant_node['predecessor']:
+                    predecessor_node['descendant'].append(descendant_node['name'])
         
 
-    def check_if_bp_is_true_for_all_ancestors(self, ancestors):
+    def check_if_bp_is_true_for_all_descendants(self, descendants):
         global node_matrix
 
-        for ancestor in ancestors:
+        for descendant in descendants:
             for node in node_matrix: 
-                if ancestor == node['name'] and node['BP'] is False:
+                if descendant == node['name'] and node['BP'] is False:
                     return False
         return True
 
 
-    def get_min_ancestor_ls_value(self, ancestors):
-        ancestor_ls_values = []
+    def get_descendants_min_ls_value(self, descendants):
+        descendant_ls_values = []
 
-        for ancestor in ancestors:
+        for descendant in descendants:
             for node in node_matrix:
-                if ancestor == node['name'] and node['BP'] is True:
-                    ancestor_ls_values.append(node['LS'])
+                if descendant == node['name'] and node['BP'] is True:
+                    descendant_ls_values.append(node['LS'])
         
-        print(ancestor_ls_values)
-        return min(ancestor_ls_values)
+        print(descendant_ls_values)
+        return min(descendant_ls_values)
 
 
     def backward_pass_of_the_network(self):
@@ -132,24 +132,24 @@ class CPM:
         node_matrix.sort(reverse = True, key = lambda x: int(x['EF']))
         last_ef_of_project = node_matrix[0]['EF']
 
-        node_matrix.sort(key = lambda x:x['ancestor'])
+        node_matrix.sort(key = lambda x:x['descendant'])
         while True:
             for node in node_matrix:
                 if node['BP'] is False:
                     
-                    if len(node['ancestor']) == 0:
+                    if len(node['descendant']) == 0:
                         node['LF'] = int(last_ef_of_project)
                         node['LS'] = int(node['LF']) - int(node['duration'])
                         node['BP'] = True
                 
-                    elif (self.check_if_bp_is_true_for_all_ancestors(node['ancestor'])):
-                        node['LF'] = int(self.get_min_ancestor_ls_value(node['ancestor']))
+                    elif (self.check_if_bp_is_true_for_all_descendants(node['descendant'])):
+                        node['LF'] = int(self.get_descendants_min_ls_value(node['descendant']))
                         node['LS'] = int(node['LF']) - int(node['duration'])
                         node['BP'] = True
 
 
             print(node['name']+ ' '+str(node['ES'])+ ' '+str(node['EF'])+' '+str(node['LS'])+' '+str(node['LF']))
-            print(node['ancestor'])
+            print(node['descendant'])
             print('')
     
             node_counter = 0
