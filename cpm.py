@@ -21,7 +21,7 @@ class CPM:
             node['predecessor'] = comma_splitted_line[1].strip().split(';')
             node['ancestor'] = []
             node['duration'] = comma_splitted_line[2].strip()
-            # node['resource'] = comma_splitted_line[3].strip()
+            node['resource'] = comma_splitted_line[3].strip()
             node['slack'] = 0
             node['critical'] = False
             node['ES'] = 0
