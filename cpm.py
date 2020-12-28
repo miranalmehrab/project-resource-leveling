@@ -18,6 +18,7 @@ def get_data_from_input_file():
         node['duration'] = comma_splitted_line[2].strip()
         # node['resource'] = comma_splitted_line[3].strip()
         node['slack'] = 0
+        node['critical'] = False
         node['ES'] = 0
         node['LS'] = 0
         node['EF'] = 0
@@ -26,7 +27,6 @@ def get_data_from_input_file():
         node['OF'] = 0
         node['FP'] = False
         node['BP'] = False
-        node['CTR'] = False
         
         node_matrix.append(node)
         id_name_pair.append({'id':node['id'], 'name':node['name']})
@@ -35,9 +35,9 @@ def get_data_from_input_file():
 def print_node_matrix():
     global node_matrix
 
-    print('name  ES   EF  LS  LF  Sl')
+    print('name  ES   EF  LS  LF  Slack Critical')
     for node in node_matrix:
-        print(node['name']+ '   '+str(node['ES'])+ '   '+str(node['EF'])+'   '+str(node['LS'])+'    '+str(node['LF'])+'    '+str(node['slack']))
+        print(node['name']+ '     '+str(node['ES'])+ '   '+str(node['EF'])+'   '+str(node['LS'])+'    '+str(node['LF'])+'    '+str(node['slack'])+' '+str(node['critical']))
         
 
 def check_if_fp_is_true_for_all_predecessors(predecessors):
@@ -161,6 +161,13 @@ def calculate_slack_time_of_the_nodes():
         node['slack'] = int(node['LS']) - int(node['ES'])    
 
 
+def mark_critical_nodes_in_network():
+    global node_matrix
+    for node in node_matrix:
+
+        if node['slack'] == 0:
+            node['critical'] = True
+
 def main():
     get_data_from_input_file()
     
@@ -171,6 +178,7 @@ def main():
     backward_pass_of_the_network()
     
     calculate_slack_time_of_the_nodes()
+    mark_critical_nodes_in_network()
     print_node_matrix()
 
 if __name__ == "__main__":
