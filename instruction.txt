@@ -2,10 +2,12 @@ Input Structure of CPM
 -----------------------
 
 Activity name, Duration, Predecessors(multiple Predecessors are semicolon separated), Resource
+[follow input.txt]
 
 
 Output Structure of CPM
 ------------------------
+
 A list of Activity-information-dictionary
 e.g.
 [ {'id': 10, 'name': 'J', 'duration': '2', 'resource': '4', 'predecessor': ['E', 'F'], 'descendant': ['N'], 
