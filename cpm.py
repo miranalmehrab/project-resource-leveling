@@ -10,7 +10,7 @@ class CPM:
         global node_matrix
 
         node_counter = 1
-        fp = open('input.txt', 'r')
+        fp = open('input1.txt', 'r')
 
         for line in fp.readlines():
             comma_splitted_line = line.split(',')

@@ -1,5 +1,7 @@
-from cpm import *
+import itertools
 import numpy as np
+
+from cpm import *
 
 
 class EstimatedResourceSmoothing:
@@ -8,6 +10,7 @@ class EstimatedResourceSmoothing:
         self.node_matrix = node_matrix
         print('- Node_Matrix -\n', self.node_matrix)
         self.critical_activities = []
+        self.critical_activities_length = 0
         self.nonCritical_activities = {}
         self.project_duration = 0
         self.nonCritical_activities_length = 0
@@ -15,20 +18,51 @@ class EstimatedResourceSmoothing:
         self.R2_by_time = []
     
 
-    def estimate_optimal_schedule(self):
-        for node in node_matrix:
+    def separate_critical_activities(self):
+        for node in self.node_matrix:
             if node["critical"] == True:
-                self.project_duration += node["duration"]
+                self.project_duration += int(node["duration"])
                 self.critical_activities.append(node)
-                
-        allotted_resources_for_cp = np.zeros((self.critical_activities.__len__, self.project_duration + 1), dtype=int)
-        for ca in self.critical_activities:
-            np.put(allotted_resources_for_cp, [ca["ES"], ca["EF"]], [ca["resource"]])
-        allotted_resources_for_cp = np.sum(allotted_resources_for_cp, axis = 0)
 
-        self.nonCritical_activities_length = self.node_matrix.__len__ - self.critical_activities.__len__
-        flexible_resource_allocation_matrix = np.zeros((self.nonCritical_activities_length, self.project_duration + 1), dtype=int)
+
+    def generate_time_resource_matrix(self):
+        allotted_resources_for_cp = np.zeros((len(self.critical_activities), self.project_duration), dtype=int)
+        for i, ca in enumerate(self.critical_activities):
+            for j in range(len(allotted_resources_for_cp[i])):
+                if j >= int(ca["ES"]) and j <= int(ca["EF"]):
+                    allotted_resources_for_cp[i][j] = int(ca["resource"])
+
+        allotted_resources_for_cp = np.sum(allotted_resources_for_cp, axis = 0)
+        allotted_resources_for_cp.shape = (1, self.project_duration)
+
+        self.nonCritical_activities_length = len(self.node_matrix) - len(self.critical_activities)
+        flexible_resource_allocation_matrix = np.zeros((self.nonCritical_activities_length, self.project_duration), dtype=int)
+
         time_resource_matrix = np.concatenate((allotted_resources_for_cp, flexible_resource_allocation_matrix))
+        print(time_resource_matrix)
+        return time_resource_matrix
+
+
+
+    def find_optimal_schedule_and_update_activity_values(self, time_resource_matrix):
+        combinations = []
+        activity_id_mapping = {}
+        for node in self.node_matrix:
+            if node["critical"] == False:
+                schedule_options_for_this_node = np.arange(int(node["slack"]) + 1)
+                activity_id_mapping[len(combinations)] = node["id"]
+                combinations.append(schedule_options_for_this_node)
+        print(combinations)
+        combinations = list(itertools.product(*combinations))
+        print(combinations)
+
+
+
+    def estimate_optimal_schedule(self):
+        self.separate_critical_activities()
+        time_resource_matrix = self.generate_time_resource_matrix()
+        self.find_optimal_schedule_and_update_activity_values(time_resource_matrix)
+
 
 
 

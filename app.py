@@ -19,6 +19,7 @@ def main():
     # ==== Estimated Method ===== #
     node_matrix = cpm.get_node_matrix()
     estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
+    estimatedSmoothing.estimate_optimal_schedule()
 
 if __name__ == "__main__":
     main()
