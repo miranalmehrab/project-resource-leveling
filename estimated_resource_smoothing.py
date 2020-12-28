@@ -54,7 +54,7 @@ class EstimatedResourceSmoothing:
                 combinations.append(schedule_options_for_this_node)
         print(combinations)
         combinations = list(itertools.product(*combinations))
-        print(combinations)
+        # print(combinations)
 
 
 

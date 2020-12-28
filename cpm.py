@@ -71,6 +71,7 @@ class CPM:
                 node['ES'] = 0
                 node['EF'] = node['duration']
                 node['FP'] = True
+                print(node)
         
 
     def forward_pass_of_the_network(self):
@@ -148,9 +149,9 @@ class CPM:
                         node['BP'] = True
 
 
-            print(node['name']+ ' '+str(node['ES'])+ ' '+str(node['EF'])+' '+str(node['LS'])+' '+str(node['LF']))
-            print(node['descendant'])
-            print('')
+            # print(node['name']+ ' '+str(node['ES'])+ ' '+str(node['EF'])+' '+str(node['LS'])+' '+str(node['LF']))
+            # print(node['descendant'])
+            # print('')
     
             node_counter = 0
             for node in node_matrix:
