@@ -18,9 +18,9 @@ class CPM:
             node = {}
             node['id'] = node_counter 
             node['name'] = comma_splitted_line[0]
-            node['duration'] = comma_splitted_line[1].strip()
+            node['predecessor'] = comma_splitted_line[1].strip().split(';')
+            node['duration'] = comma_splitted_line[2].strip()
             node['resource'] = comma_splitted_line[3].strip()
-            node['predecessor'] = comma_splitted_line[2].strip().split(';')
             node['descendant'] = []
             node['slack'] = 0
             node['critical'] = False
