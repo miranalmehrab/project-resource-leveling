@@ -8,7 +8,7 @@ class EstimatedResourceSmoothing:
 
     def __init__(self, node_matrix=[]):
         self.node_matrix = node_matrix
-        print('- Node_Matrix -\n', self.node_matrix)
+        # print('- Node_Matrix -\n', self.node_matrix)
         self.critical_activities = []
         self.critical_activities_length = 0
         self.nonCritical_activities = {}
@@ -27,7 +27,7 @@ class EstimatedResourceSmoothing:
 
     def generate_time_resource_matrix(self):
         allotted_resources_for_cp = np.zeros(self.project_duration + 1, dtype=int)
-        
+
         for ca in self.critical_activities:
             for ind, value in enumerate(allotted_resources_for_cp):
                 if ind > int(ca["ES"]) and ind <= int(ca["EF"]):

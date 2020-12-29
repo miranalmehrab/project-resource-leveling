@@ -40,9 +40,9 @@ class CPM:
     def print_node_matrix(self):
         global node_matrix
 
-        print('name  ES   EF  LS  LF  Slack Critical')
+        print('Name  Resource   ES\tEF\tLS\tLF\tSlack\tCritical')
         for node in node_matrix:
-            print(node['name']+ '     '+str(node['ES'])+ '   '+str(node['EF'])+'   '+str(node['LS'])+'    '+str(node['LF'])+'    '+str(node['slack'])+' '+str(node['critical']))
+            print(node['name']+ '\t'+str(node['resource'])+ '\t'+str(node['ES'])+ '\t'+str(node['EF'])+'\t'+str(node['LS'])+'\t'+str(node['LF'])+'\t'+str(node['slack'])+'\t'+str(node['critical']))
             
 
     def check_if_fp_is_true_for_all_predecessors(self, predecessors):
