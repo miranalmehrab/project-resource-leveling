@@ -14,6 +14,7 @@ class EstimatedResourceSmoothing:
         self.nonCritical_activities = {}
         self.project_duration = 0
         self.nonCritical_activities_length = 0
+        self.optimal_time_resource_matrix = None
         self.R_by_time = []
         self.R2_by_time = []
         self.optimal_total_R = int(1e9)
@@ -21,16 +22,19 @@ class EstimatedResourceSmoothing:
     
 
     def print_estimate_schedule_details(self):
-        print("Total R: ", self.optimal_total_R)
+        print("---------------------------------")
+        print("Optimal Time-Resource Matrix")
+        print(self.optimal_time_resource_matrix)
+        print("\nTotal R: ", self.optimal_total_R)
         print(self.R_by_time)
         print("Total R-square: ", self.optimal_total_R_square)
         print(self.R2_by_time)
         print("Name\tOS\tOF\tSlack")
         for node in self.node_matrix:
             if node["critical"] == True:
-                print(node["name"], "\t\t", node["ES"], "\t", node["EF"], "\t", node["slack"])
+                print(node["name"], "\t", node["ES"], "\t", node["EF"], "\t", node["slack"])
             else:
-                print(node["name"], "\t\t", node["OS"], "\t", node["OF"], "\t", node["slack"])
+                print(node["name"], "\t", node["OS"], "\t", node["OF"], "\t", node["slack"])
 
 
     def separate_critical_activities(self):
@@ -55,10 +59,6 @@ class EstimatedResourceSmoothing:
         flexible_resource_allocation_matrix = np.zeros((1, self.project_duration + 1), dtype=int)
 
         time_resource_matrix = np.concatenate((allotted_resources_for_cp, flexible_resource_allocation_matrix))
-        # print(time_resource_matrix)
-        # time_resource_matrix[1] = np.arange(self.project_duration + 1)
-        # print(time_resource_matrix)
-        # time_resource_matrix[1] = np.zeros(self.project_duration + 1)
         print(time_resource_matrix)
         return time_resource_matrix
 
@@ -75,8 +75,10 @@ class EstimatedResourceSmoothing:
         self.R_by_time = np.sum(time_resource_matrix, 0)
         self.R2_by_time = [ r*r for r in self.R_by_time ]
         if np.sum(self.R2_by_time) < self.optimal_total_R_square:
+            # print(time_resource_matrix)
             self.optimal_total_R_square = np.sum(self.R2_by_time)
             self.optimal_total_R = np.sum(self.R_by_time)
+            self.optimal_time_resource_matrix = np.copy(time_resource_matrix)
             self.update_optimal_start_and_finish_time(comb_choice, pos_in_combination_and_node_matrix_ind_mapping)
 
 
@@ -90,21 +92,6 @@ class EstimatedResourceSmoothing:
                 combinations.append(schedule_options_for_this_node)
         print(combinations)
         combinations = list(itertools.product(*combinations))
-
-        # First Choice --> BAD #
-        # for choice in combinations:
-        #     for i, shift in enumerate(choice):
-        #         node = pos_in_combination_and_node_matrix_ind_mapping[i]
-        #         # print(node)
-        #         es, duration, lf = int(node["ES"]), int(node["duration"]), int(node["LF"])
-        #         # print("es=", es," dur=", duration," lf=", lf)
-        #         for index in range(es+1, lf+1):
-        #             if (index > es and index <= es + int(shift)) or (index > es + int(shift) + duration and index <= lf):
-        #                 time_resource_matrix[i+1][index] = 0
-        #             elif index > es + int(shift) and index <= es + int(shift) + duration:
-        #                 time_resource_matrix[i+1][index] = int(node["resource"])
-        #             # elif index > es + shift + duration and index <= lf:
-        #             #     time_resource_matrix[i+1][index] = 0
         
         # 2nd Choice --> LET'S SEE #
         for comb_choice in combinations:
@@ -114,8 +101,8 @@ class EstimatedResourceSmoothing:
                 for index in range(es+1, lf+1):
                     if index > es + int(shift) and index <= es + int(shift) + duration:
                         time_resource_matrix[1][index] += int(node["resource"])
-                self.check_for_optimality(time_resource_matrix, comb_choice, pos_in_combination_and_node_matrix_ind_mapping)
-                time_resource_matrix[1] = np.zeros(self.project_duration + 1, dtype=int)
+            self.check_for_optimality(time_resource_matrix, comb_choice, pos_in_combination_and_node_matrix_ind_mapping)
+            time_resource_matrix[1] = np.zeros(self.project_duration + 1, dtype=int)
 
 
 
