@@ -52,7 +52,7 @@ class EstimatedResourceSmoothing:
 
     def update_optimal_start_and_finish_time(self, comb_choice, pos_in_combination_and_node_matrix_ind_mapping):
         for i, shift in enumerate(comb_choice):
-            node_matrix_index = pos_in_combination_and_node_matrix_ind_mapping[i+1]
+            node_matrix_index = pos_in_combination_and_node_matrix_ind_mapping[i]
             es, duration = int(self.node_matrix[node_matrix_index]["ES"]), int(self.node_matrix[node_matrix_index]["duration"])
             self.node_matrix[node_matrix_index]["OS"] = es + int(shift) 
             self.node_matrix[node_matrix_index]["OF"] = es + int(shift) + duration
@@ -73,15 +73,15 @@ class EstimatedResourceSmoothing:
         for index,node in enumerate(self.node_matrix):
             if node["critical"] == False:
                 schedule_options_for_this_node = np.arange(int(node["slack"]) + 1)
-                combinations.append(schedule_options_for_this_node)
                 pos_in_combination_and_node_matrix_ind_mapping[len(combinations)] = index
+                combinations.append(schedule_options_for_this_node)
         print(combinations)
         combinations = list(itertools.product(*combinations))
 
         # First Choice --> BAD #
         # for choice in combinations:
         #     for i, shift in enumerate(choice):
-        #         node = pos_in_combination_and_node_matrix_ind_mapping[i+1]
+        #         node = pos_in_combination_and_node_matrix_ind_mapping[i]
         #         # print(node)
         #         es, duration, lf = int(node["ES"]), int(node["duration"]), int(node["LF"])
         #         # print("es=", es," dur=", duration," lf=", lf)
@@ -96,7 +96,7 @@ class EstimatedResourceSmoothing:
         # 2nd Choice --> LET'S SEE #
         for comb_choice in combinations:
             for i, shift in enumerate(comb_choice):
-                node = self.node_matrix[ pos_in_combination_and_node_matrix_ind_mapping[i+1] ]
+                node = self.node_matrix[ pos_in_combination_and_node_matrix_ind_mapping[i] ]
                 es, duration, lf = int(node["ES"]), int(node["duration"]), int(node["LF"])
                 for index in range(es+1, lf+1):
                     if index > es + int(shift) and index <= es + int(shift) + duration:
