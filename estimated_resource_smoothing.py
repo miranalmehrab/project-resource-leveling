@@ -87,7 +87,7 @@ class EstimatedResourceSmoothing:
 
 
 
-    def find_optimal_schedule_and_update_activity_values(self, time_resource_matrix):
+    def estimated_resource_scheduler(self, time_resource_matrix):
         combinations = []
         pos_in_combination_and_node_matrix_ind_mapping = {}
         for index,node in enumerate(self.node_matrix):
@@ -113,7 +113,7 @@ class EstimatedResourceSmoothing:
     def estimate_optimal_schedule(self):
         self.separate_critical_activities()
         time_resource_matrix = self.generate_time_resource_matrix()
-        self.find_optimal_schedule_and_update_activity_values(time_resource_matrix)
+        self.estimated_resource_scheduler(time_resource_matrix)
         self.print_estimate_schedule_details()
         
 
