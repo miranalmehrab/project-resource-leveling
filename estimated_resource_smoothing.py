@@ -52,14 +52,10 @@ class EstimatedResourceSmoothing:
                 if ind > int(ca["ES"]) and ind <= int(ca["EF"]):
                     allotted_resources_for_cp[ind] = value + int(ca["resource"])              
         allotted_resources_for_cp.shape = (1, self.project_duration + 1)
-        # print(allotted_resources_for_cp)
-
-        # self.nonCritical_activities_length = len(self.node_matrix) - len(self.critical_activities)
-        # flexible_resource_allocation_matrix = np.zeros((self.nonCritical_activities_length, self.project_duration + 1), dtype=int)
+    
         flexible_resource_allocation_matrix = np.zeros((1, self.project_duration + 1), dtype=int)
-
         time_resource_matrix = np.concatenate((allotted_resources_for_cp, flexible_resource_allocation_matrix))
-        print(time_resource_matrix)
+        # print(time_resource_matrix)
         return time_resource_matrix
 
 
@@ -91,9 +87,8 @@ class EstimatedResourceSmoothing:
                 pos_in_combination_and_node_matrix_ind_mapping[len(combinations)] = index
                 combinations.append(schedule_options_for_this_node)
         print(combinations)
-        combinations = list(itertools.product(*combinations))
-        
-        # 2nd Choice --> LET'S SEE #
+        combinations = list(itertools.product(*combinations))     
+        # 2nd Choice of Implementation --> LET'S SEE #
         for comb_choice in combinations:
             for i, shift in enumerate(comb_choice):
                 node = self.node_matrix[ pos_in_combination_and_node_matrix_ind_mapping[i] ]
