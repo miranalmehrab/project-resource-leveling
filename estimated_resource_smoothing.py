@@ -30,12 +30,12 @@ class EstimatedResourceSmoothing:
         print(self.R_by_time)
         print("Total R-square: ", self.optimal_total_R_square)
         print(self.R2_by_time)
-        print("Name\tOS\tOF\tSlack")
+        print("Name\tOS\tOF\tResource  Slack")
         for node in self.node_matrix:
             if node["critical"] == True:
-                print(node["name"], "\t", node["ES"], "\t", node["EF"], "\t", node["slack"])
+                print(node["name"], "\t", node["ES"], "\t", node["EF"], "\t", node["resource"], "\t", node["slack"])
             else:
-                print(node["name"], "\t", node["OS"], "\t", node["OF"], "\t", node["slack"])
+                print(node["name"], "\t", node["OS"], "\t", node["OF"], "\t", node["resource"], "\t", node["slack"])
 
 
 
