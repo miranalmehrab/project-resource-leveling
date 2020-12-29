@@ -14,3 +14,19 @@ e.g.
  'slack': 8, 'critical': False, 'ES': 8, 'LS': 16, 'EF': 10, 'LF': 18, 'OS': 0, 'OF': 0, 'FP': True, 'BP': True},
  {'id': 2, ...},
  {'id': 5, ...} ] 
+
+
+ Output Structure of Burgess / Estimated Method
+------------------------------------------------
+
+3 lists: 
+    - one with updated-activity-info (mainly OS, OF update)
+    - one with Rcount (in each time unit)
+    - one with R^2count (in each time unit)
+e.g.
+[ {'id': 10, 'name': 'J', 'duration': '2', 'resource': '4', 'predecessor': ['E', 'F'], 'descendant': ['N'], 
+ 'slack': 8, 'critical': False, 'ES': 8, 'LS': 16, 'EF': 10, 'LF': 18, 'OS': 11, 'OF': 13, 'FP': True, 'BP': True},
+ {'id': 2, ...},
+ {'id': 5, ...} ]       // OS, OF updated based on algorithm
+[3, 5, 4, 6, 7]         // R (Resource count in 5 time units)
+[9, 25, 16, 36, 49]     // R^2 (in 5 time units)
