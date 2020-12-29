@@ -26,17 +26,17 @@ class EstimatedResourceSmoothing:
 
 
     def generate_time_resource_matrix(self):
-        allotted_resources_for_cp = np.zeros((len(self.critical_activities), self.project_duration), dtype=int)
-        for i, ca in enumerate(self.critical_activities):
-            for j in range(len(allotted_resources_for_cp[i])):
-                if j >= int(ca["ES"]) and j <= int(ca["EF"]):
-                    allotted_resources_for_cp[i][j] = int(ca["resource"])
-
-        allotted_resources_for_cp = np.sum(allotted_resources_for_cp, axis = 0)
-        allotted_resources_for_cp.shape = (1, self.project_duration)
+        allotted_resources_for_cp = np.zeros(self.project_duration + 1, dtype=int)
+        
+        for ca in self.critical_activities:
+            for ind, value in enumerate(allotted_resources_for_cp):
+                if ind > int(ca["ES"]) and ind <= int(ca["EF"]):
+                    allotted_resources_for_cp[ind] = value + int(ca["resource"])              
+        allotted_resources_for_cp.shape = (1, self.project_duration + 1)
+        # print(allotted_resources_for_cp)
 
         self.nonCritical_activities_length = len(self.node_matrix) - len(self.critical_activities)
-        flexible_resource_allocation_matrix = np.zeros((self.nonCritical_activities_length, self.project_duration), dtype=int)
+        flexible_resource_allocation_matrix = np.zeros((self.nonCritical_activities_length, self.project_duration + 1), dtype=int)
 
         time_resource_matrix = np.concatenate((allotted_resources_for_cp, flexible_resource_allocation_matrix))
         print(time_resource_matrix)

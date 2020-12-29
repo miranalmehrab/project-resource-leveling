@@ -4,7 +4,8 @@ from estimated_resource_smoothing import *
 
 def main():
     cpm = CPM()
-    cpm.get_data_from_input_file()
+    input_file = 'input1.txt'
+    cpm.get_data_from_input_file(input_file)
     
     cpm.calculate_start_node()
     cpm.forward_pass_of_the_network()

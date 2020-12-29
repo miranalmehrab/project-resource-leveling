@@ -6,11 +6,11 @@ class CPM:
     def get_node_matrix(self):
         return node_matrix
 
-    def get_data_from_input_file(self):
+    def get_data_from_input_file(self, filename):
         global node_matrix
 
         node_counter = 1
-        fp = open('input1.txt', 'r')
+        fp = open(filename, 'r')
 
         for line in fp.readlines():
             comma_splitted_line = line.split(',')
