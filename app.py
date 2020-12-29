@@ -4,7 +4,7 @@ from estimated_resource_smoothing import *
 
 def main():
     cpm = CPM()
-    input_file = 'input1.txt'
+    input_file = 'input1.csv'
     cpm.get_data_from_input_file(input_file)
     
     cpm.calculate_start_node()
