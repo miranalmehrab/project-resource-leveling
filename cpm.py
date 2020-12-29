@@ -71,7 +71,7 @@ class CPM:
                 node['ES'] = 0
                 node['EF'] = node['duration']
                 node['FP'] = True
-                print(node)
+                # print(node)
         
 
     def forward_pass_of_the_network(self):
@@ -124,7 +124,7 @@ class CPM:
                 if descendant == node['name'] and node['BP'] is True:
                     descendant_ls_values.append(node['LS'])
         
-        print(descendant_ls_values)
+        # print(descendant_ls_values)
         return min(descendant_ls_values)
 
 
