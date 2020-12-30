@@ -92,7 +92,7 @@ class EstimatedResourceSmoothing:
     def check_for_valid_combinations(self, combinations, node_name_and_pos_in_combination_map, pos_in_combination_and_node_matrix_ind_mapping):
         invalid_combo = np.array([])
         combinations = np.array(combinations)
-        print(combinations.shape)
+        # print(combinations.shape)
         for ind, cur_node in enumerate(self.node_matrix):
             if cur_node["critical"] == False:
                 invalid = []
@@ -136,6 +136,7 @@ class EstimatedResourceSmoothing:
                         time_resource_matrix[1][index] += int(node["resource"])
             self.check_for_optimality(time_resource_matrix, comb_choice, pos_in_combination_and_node_matrix_ind_mapping)
             time_resource_matrix[1] = np.zeros(self.project_duration + 1, dtype=int)
+        
 
 
 
@@ -143,6 +144,14 @@ class EstimatedResourceSmoothing:
         self.separate_critical_activities()
         time_resource_matrix = self.generate_time_resource_matrix()
         self.estimated_resource_scheduler(time_resource_matrix)
-        self.print_estimate_schedule_details()
+        node_matrix = self.node_matrix
+        R_by_time = self.R_by_time.tolist()
+        R2_by_time = self.R2_by_time.tolist()
+        optimal_total_R = int(self.optimal_total_R)
+        optimal_total_R_square = int(self.optimal_total_R_square)
+        # print(optimal_total_R_square)
+        return {"node_matrix": node_matrix , "R_by_time": R_by_time, "R2_by_time": R2_by_time, 
+                    "optimal_total_R": optimal_total_R, "optimal_total_R_square": optimal_total_R_square}
+        # self.print_estimate_schedule_details()
         
 

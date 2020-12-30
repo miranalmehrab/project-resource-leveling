@@ -1,3 +1,5 @@
+import os
+import json
 from cpm import *
 from estimated_resource_smoothing import *
 from flask import Flask, render_template, request, jsonify
@@ -5,16 +7,21 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__, template_folder='templates')
 app.static_folder = 'static'
+app.config['UPLOAD_FOLDER'] = "dataset"
 
 
-@app.route('/postDataset/', methods=['POST'])
+@app.route('/postDataset/', methods=['POST', 'PUT'])
 def post_dataset():
-    method = request.form['method']
-    file = request.form['file']
-    print(method, "\n", file)
-    # result = main("Estimated")
-   
-    return jsonify({ "Message": "Response Message" })
+    if request.method == "POST":
+        selected_method = request.form['method']
+        _file = request.files['file']
+        # print(selected_method, _file)
+        if _file.filename != '':
+            _file.save(os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
+        result = main(selected_method, os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
+        # print(result)
+        return json.dumps(result)
+
 
 # A welcome message to test our server
 @app.route('/')
@@ -23,9 +30,10 @@ def index():
 
 
 
-def main(method):
+def main(method, filepath):
     cpm = CPM()
-    input_file = 'input1.csv'
+    # input_file = 'input1.csv'
+    input_file = filepath
     cpm.get_data_from_input_file(input_file)
     
     cpm.calculate_start_node()
