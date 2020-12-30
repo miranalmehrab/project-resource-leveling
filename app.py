@@ -1,35 +1,29 @@
 from cpm import *
 from estimated_resource_smoothing import *
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
+app.static_folder = 'static'
 
 
 @app.route('/postDataset/', methods=['POST'])
 def post_dataset():
-    param = request.form.get('name')
-    print(param)
-    # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
-    if param:
-        return jsonify({
-            "Message": f"Welcome {name} to our awesome platform!!",
-            # Add this option to distinct the POST request
-            "METHOD" : "POST"
-        })
-    else:
-        return jsonify({
-            "ERROR": "no name found, please send a name."
-        })
+    method = request.form['method']
+    file = request.form['file']
+    print(method, "\n", file)
+    # result = main("Estimated")
+   
+    return jsonify({ "Message": "Response Message" })
 
 # A welcome message to test our server
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return render_template('index.html')
 
 
 
-def main():
+def main(method):
     cpm = CPM()
     input_file = 'input1.csv'
     cpm.get_data_from_input_file(input_file)
@@ -45,11 +39,17 @@ def main():
     cpm.print_node_matrix()
 
     # ==== Estimated Method ===== #
-    node_matrix = cpm.get_node_matrix()
-    estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
-    estimatedSmoothing.estimate_optimal_schedule()
+    result = []
+    if method.strip() == "Estimated":
+        node_matrix = cpm.get_node_matrix()
+        estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
+        result = estimatedSmoothing.estimate_optimal_schedule()
+    else:
+        ""
+    return result
+
 
 if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
-    # app.run(threaded=True, port=5000)
-    main()
+    app.run(threaded=True, port=5000)
+    # main("Estimated")
