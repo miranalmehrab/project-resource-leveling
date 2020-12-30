@@ -23,9 +23,9 @@ class EstimatedResourceSmoothing:
 
 
     def print_estimate_schedule_details(self):
-        print("---------------------------------")
-        print("Optimal Time-Resource Matrix")
-        print(self.optimal_time_resource_matrix)
+        print("\n--------------------------------\n")
+        # print("Optimal Time-Resource Matrix")
+        # print(self.optimal_time_resource_matrix)
         print("\nTotal R: ", self.optimal_total_R)
         print(self.R_by_time)
         print("Total R-square: ", self.optimal_total_R_square)
@@ -95,7 +95,7 @@ class EstimatedResourceSmoothing:
                 schedule_options_for_this_node = np.arange(int(node["slack"]) + 1)
                 pos_in_combination_and_node_matrix_ind_mapping[len(combinations)] = index
                 combinations.append(schedule_options_for_this_node)
-        print(combinations)
+        print("Slack options for non-critical activities:\n", combinations)
         combinations = list(itertools.product(*combinations))     
         # ======  2nd Choice of Implementation --> LET'S SEE ======== #
         for comb_choice in combinations:
@@ -117,15 +117,3 @@ class EstimatedResourceSmoothing:
         self.print_estimate_schedule_details()
         
 
-
-
-## ============= Run from app.py, This main() isn't modified ============ ##
-
-def main():
-    cpm = CPM()
-    node_matrix = cpm.get_node_matrix()
-    # print(node_matrix)
-    estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
-
-if __name__ == "__main__":
-    main()
