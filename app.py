@@ -47,27 +47,19 @@ def main(method, filepath):
     cpm.mark_critical_nodes_in_network()
     cpm.print_node_matrix()
 
-    # ==== Estimated Method ===== #
-<<<<<<< HEAD
-    # node_matrix = cpm.get_node_matrix()
-    # estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
-    # estimatedSmoothing.estimate_optimal_schedule()
-
-    # ==== Burgess Procedure ===== #
-    node_matrix = cpm.get_node_matrix()
-    burgessProcedure = BurgessProcedure(node_matrix)
-    burgessProcedure.estimate_optimal_schedule()
-=======
     result = []
+    node_matrix = cpm.get_node_matrix()
     if method.strip() == "Estimated":
-        node_matrix = cpm.get_node_matrix()
+        # ==== Estimated Method ===== #
         estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
         result = estimatedSmoothing.estimate_optimal_schedule()
     else:
-        ""
+        # ==== Burgess Procedure ===== #
+        # node_matrix = cpm.get_node_matrix()
+        burgessProcedure = BurgessProcedure(node_matrix)
+        burgessProcedure.estimate_optimal_schedule()
     return result
 
->>>>>>> d2b87c0fd879685fdca180b2ab6ae0ffd44bdad3
 
 if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
