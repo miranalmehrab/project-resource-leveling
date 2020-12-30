@@ -1,5 +1,6 @@
 from cpm import *
 from estimated_resource_smoothing import *
+from burgess_procedure import *
 
 
 def main():
@@ -18,9 +19,14 @@ def main():
     cpm.print_node_matrix()
 
     # ==== Estimated Method ===== #
+    # node_matrix = cpm.get_node_matrix()
+    # estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
+    # estimatedSmoothing.estimate_optimal_schedule()
+
+    # ==== Burgess Procedure ===== #
     node_matrix = cpm.get_node_matrix()
-    estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
-    estimatedSmoothing.estimate_optimal_schedule()
+    burgessProcedure = BurgessProcedure(node_matrix)
+    burgessProcedure.estimate_optimal_schedule()
 
 if __name__ == "__main__":
     main()
