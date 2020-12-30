@@ -2,6 +2,7 @@ import os
 import json
 from cpm import *
 from estimated_resource_smoothing import *
+from burgess_procedure import *
 from flask import Flask, render_template, request, jsonify
 
 
@@ -47,6 +48,16 @@ def main(method, filepath):
     cpm.print_node_matrix()
 
     # ==== Estimated Method ===== #
+<<<<<<< HEAD
+    # node_matrix = cpm.get_node_matrix()
+    # estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
+    # estimatedSmoothing.estimate_optimal_schedule()
+
+    # ==== Burgess Procedure ===== #
+    node_matrix = cpm.get_node_matrix()
+    burgessProcedure = BurgessProcedure(node_matrix)
+    burgessProcedure.estimate_optimal_schedule()
+=======
     result = []
     if method.strip() == "Estimated":
         node_matrix = cpm.get_node_matrix()
@@ -56,6 +67,7 @@ def main(method, filepath):
         ""
     return result
 
+>>>>>>> d2b87c0fd879685fdca180b2ab6ae0ffd44bdad3
 
 if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
