@@ -106,7 +106,7 @@ class EstimatedResourceSmoothing:
                     invalid = np.where(es_cur_node + combinations[:, cur_node_pos] < ef_pred_node + combinations[:, pred_ind])
                     invalid_combo = np.append(invalid_combo, np.unique(invalid))
                     invalid_combo = np.unique(invalid_combo)
-        combinations = np.delete(combinations, invalid_combo, axis=0)
+        combinations = np.delete(combinations, invalid_combo.astype(int), axis=0)
         return combinations.tolist()
 
                 
