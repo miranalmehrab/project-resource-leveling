@@ -1,11 +1,32 @@
 from cpm import *
 from estimated_resource_smoothing import *
 from burgess_procedure import *
+from flask import Flask, render_template, request, jsonify
 
 
-def main():
+app = Flask(__name__, template_folder='templates')
+app.static_folder = 'static'
+
+
+@app.route('/postDataset/', methods=['POST'])
+def post_dataset():
+    method = request.form['method']
+    file = request.form['file']
+    print(method, "\n", file)
+    # result = main("Estimated")
+   
+    return jsonify({ "Message": "Response Message" })
+
+# A welcome message to test our server
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+
+def main(method):
     cpm = CPM()
-    input_file = 'dataset1.csv'
+    input_file = 'input1.csv'
     cpm.get_data_from_input_file(input_file)
     
     cpm.calculate_start_node()
@@ -19,6 +40,7 @@ def main():
     cpm.print_node_matrix()
 
     # ==== Estimated Method ===== #
+<<<<<<< HEAD
     # node_matrix = cpm.get_node_matrix()
     # estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
     # estimatedSmoothing.estimate_optimal_schedule()
@@ -27,6 +49,19 @@ def main():
     node_matrix = cpm.get_node_matrix()
     burgessProcedure = BurgessProcedure(node_matrix)
     burgessProcedure.estimate_optimal_schedule()
+=======
+    result = []
+    if method.strip() == "Estimated":
+        node_matrix = cpm.get_node_matrix()
+        estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
+        result = estimatedSmoothing.estimate_optimal_schedule()
+    else:
+        ""
+    return result
+
+>>>>>>> d2b87c0fd879685fdca180b2ab6ae0ffd44bdad3
 
 if __name__ == "__main__":
-    main()
+    # Threaded option to enable multiple instances for multiple user access support
+    app.run(threaded=True, port=5000)
+    # main("Estimated")
