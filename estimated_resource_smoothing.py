@@ -40,10 +40,12 @@ class EstimatedResourceSmoothing:
 
 
     def separate_critical_activities(self):
-        for node in self.node_matrix:
+        for ind, node in enumerate(self.node_matrix):
             if node["critical"] == True:
                 self.project_duration += int(node["duration"])
                 self.critical_activities.append(node)
+                self.node_matrix[ind]["OS"] = node["ES"]
+                self.node_matrix[ind]["OF"] = node["EF"] 
 
 
 
@@ -77,7 +79,6 @@ class EstimatedResourceSmoothing:
         total_R_through_time = np.sum(time_resource_matrix, 0)
         total_R_square_through_time = [ r*r for r in total_R_through_time ]
         if np.sum(total_R_square_through_time) < self.optimal_total_R_square:
-            # print(time_resource_matrix)
             self.optimal_total_R_square = np.sum(total_R_square_through_time)
             self.optimal_total_R = np.sum(total_R_through_time)
             self.optimal_time_resource_matrix = np.copy(time_resource_matrix)
@@ -87,16 +88,44 @@ class EstimatedResourceSmoothing:
 
 
 
+
+    def check_for_valid_combinations(self, combinations, node_name_and_pos_in_combination_map, pos_in_combination_and_node_matrix_ind_mapping):
+        invalid_combo = np.array([])
+        combinations = np.array(combinations)
+        print(combinations.shape)
+        for ind, cur_node in enumerate(self.node_matrix):
+            if cur_node["critical"] == False:
+                invalid = []
+                cur_node_pos = node_name_and_pos_in_combination_map[cur_node["name"]]
+                predecessors_indices_in_comb = [ node_name_and_pos_in_combination_map[name] for name in cur_node["predecessor"] 
+                                        if name in node_name_and_pos_in_combination_map.keys() ]
+                # print(cur_node["name"], " ", cur_node["predecessor"], " ", predecessors_indices_in_comb)
+                for pred_ind in predecessors_indices_in_comb:
+                    pred_node = self.node_matrix[ pos_in_combination_and_node_matrix_ind_mapping[pred_ind] ]
+                    es_cur_node, ef_pred_node =  int(cur_node["ES"]), int(pred_node["EF"])
+                    invalid = np.where(es_cur_node + combinations[:, cur_node_pos] < ef_pred_node + combinations[:, pred_ind])
+                    invalid_combo = np.append(invalid_combo, np.unique(invalid))
+                    invalid_combo = np.unique(invalid_combo)
+        combinations = np.delete(combinations, invalid_combo, axis=0)
+        return combinations.tolist()
+
+                
+
+
     def estimated_resource_scheduler(self, time_resource_matrix):
         combinations = []
         pos_in_combination_and_node_matrix_ind_mapping = {}
-        for index,node in enumerate(self.node_matrix):
+        node_name_and_pos_in_combination_map = {}
+        for index, node in enumerate(self.node_matrix):
             if node["critical"] == False:
-                schedule_options_for_this_node = np.arange(int(node["slack"]) + 1)
+                schedule_options_for_this_node = np.arange(int(node["slack"]) + 1, dtype=int)
                 pos_in_combination_and_node_matrix_ind_mapping[len(combinations)] = index
+                node_name_and_pos_in_combination_map[node["name"]] = len(combinations)
                 combinations.append(schedule_options_for_this_node)
-        print("Slack options for non-critical activities:\n", combinations)
-        combinations = list(itertools.product(*combinations))     
+        # print("Slack options for non-critical activities:\n", combinations)
+        combinations = list(itertools.product(*combinations))
+        combinations = self.check_for_valid_combinations(combinations, 
+                        node_name_and_pos_in_combination_map, pos_in_combination_and_node_matrix_ind_mapping)     
         # ======  2nd Choice of Implementation --> LET'S SEE ======== #
         for comb_choice in combinations:
             for i, shift in enumerate(comb_choice):
