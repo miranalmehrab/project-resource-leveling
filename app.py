@@ -58,10 +58,13 @@ def main(method, filepath):
         # node_matrix = cpm.get_node_matrix()
         burgessProcedure = BurgessProcedure(node_matrix)
         result = burgessProcedure.estimate_optimal_schedule()
-    return result
+    # return result
 
 
 if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+    # app.run(threaded=True, port=5000)
+    method = input()
+    method = method.split(",")
+    main(method[0].strip(), method[1].strip())
     # main("Estimated")

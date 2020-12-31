@@ -150,8 +150,8 @@ class EstimatedResourceSmoothing:
         optimal_total_R = int(self.optimal_total_R)
         optimal_total_R_square = int(self.optimal_total_R_square)
         # print(optimal_total_R_square)
+        self.print_estimate_schedule_details()
         return {"node_matrix": node_matrix , "R_by_time": R_by_time, "R2_by_time": R2_by_time, 
                     "optimal_total_R": optimal_total_R, "optimal_total_R_square": optimal_total_R_square}
-        # self.print_estimate_schedule_details()
         
 

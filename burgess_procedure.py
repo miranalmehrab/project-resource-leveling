@@ -25,12 +25,12 @@ class BurgessProcedure:
 
     def print_burgess_schedule_details(self):
         print("---------------------------------")
-        print("Name\tOS\tOF\tShift \tR^2")
+        print("Name\tOS\tOF\tShift")
         for node in self.node_matrix:
             if node["critical"] == True:
                 print(node["name"], "\t", node["OS"], "\t", node["OF"], "\t", int(node["OS"])-int(node["ES"]))
             else:
-                print(node["name"], "\t", node["OS"], "\t", node["OF"], "\t", int(node["OS"])-int(node["ES"]),"\t",self.delay_activity_resluts[node["name"]])
+                print(node["name"], "\t", node["OS"], "\t", node["OF"], "\t", int(node["OS"])-int(node["ES"]))
 
 
     def initialize_OS_OF(self):
@@ -112,13 +112,15 @@ class BurgessProcedure:
                         min_sum = self.delay_activity_resluts[node["name"]]
                         optimal_R2_by_time = np.copy(square_resources)
 
-            print("Min sum", min_sum)
+            # print("Min sum", min_sum)
             # self.print_burgess_schedule_details()
             if min_sum < self.optimal_total_R_square:
                 self.optimal_total_R_square = min_sum
                 self.R2_by_time = np.copy(optimal_R2_by_time)
             else:
-                break     
+                break   
+        print("Optimal R-square", self.optimal_total_R_square)
+        self.print_burgess_schedule_details()  
 
 
     def estimate_optimal_schedule(self):
