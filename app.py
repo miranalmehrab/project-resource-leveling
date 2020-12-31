@@ -57,7 +57,7 @@ def main(method, filepath):
         # ==== Burgess Procedure ===== #
         # node_matrix = cpm.get_node_matrix()
         burgessProcedure = BurgessProcedure(node_matrix)
-        burgessProcedure.estimate_optimal_schedule()
+        result = burgessProcedure.estimate_optimal_schedule()
     return result
 
 

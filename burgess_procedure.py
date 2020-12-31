@@ -70,10 +70,12 @@ class BurgessProcedure:
                         allotted_resources[ind] = value + int(a["resource"]) 
         return allotted_resources
 
+
     def burgess_scheduler(self, allotted_resources_for_cp):
         sorted_node_matrix = sorted(self.node_matrix, key = lambda i: int(i['ES']), reverse=True)
         while True:
             min_sum = int(1e9)
+            optimal_R2_by_time = []
             for node in sorted_node_matrix:
                 if node["critical"] == False:
                     # print("node", node, "\n")
@@ -108,11 +110,13 @@ class BurgessProcedure:
                             node["OF"] = int(node["EF"]) + i
                     if self.delay_activity_resluts[node["name"]] < min_sum:
                         min_sum = self.delay_activity_resluts[node["name"]]
+                        optimal_R2_by_time = np.copy(square_resources)
 
             print("Min sum", min_sum)
-            self.print_burgess_schedule_details()
+            # self.print_burgess_schedule_details()
             if min_sum < self.optimal_total_R_square:
                 self.optimal_total_R_square = min_sum
+                self.R2_by_time = np.copy(optimal_R2_by_time)
             else:
                 break     
 
@@ -122,4 +126,12 @@ class BurgessProcedure:
         self.separate_critical_activities()
         allotted_resources_for_cp = self.generate_time_resource_matrix()
         self.burgess_scheduler(allotted_resources_for_cp)
+        node_matrix = self.node_matrix
+        # R_by_time = self.R_by_time.tolist()
+        R2_by_time = self.R2_by_time.tolist()
+        # optimal_total_R = int(self.optimal_total_R)
+        optimal_total_R_square = int(self.optimal_total_R_square)
+        # print(optimal_total_R_square)
+        return {"node_matrix": node_matrix ,  "R2_by_time": R2_by_time, 
+                     "optimal_total_R_square": optimal_total_R_square}
         
