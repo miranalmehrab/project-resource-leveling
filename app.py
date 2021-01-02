@@ -38,6 +38,7 @@ def main(filepath):
     cpm = CPM()
     cpm.find_all_activity_informations(input_file)
     node_matrix = cpm.get_node_matrix()
+    print(node_matrix)
     
     result = []
     # ==== Estimated Method ===== #
