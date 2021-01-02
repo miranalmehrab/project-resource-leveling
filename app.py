@@ -14,12 +14,12 @@ app.config['UPLOAD_FOLDER'] = "dataset"
 @app.route('/postDataset/', methods=['POST', 'PUT'])
 def post_dataset():
     if request.method == "POST":
-        selected_method = request.form['method']
         _file = request.files['file']
+        # selected_method = request.form['method']
         # print(selected_method, _file)
         if _file.filename != '':
             _file.save(os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
-        result = main(selected_method, os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
+        result = main(os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
         # print(result)
         return json.dumps(result)
 
@@ -31,33 +31,22 @@ def index():
 
 
 
-def main(method, filepath):
-    cpm = CPM()
+def main(filepath):
     # input_file = 'input1.csv'
     input_file = filepath
-    cpm.get_data_from_input_file(input_file)
-    
-    cpm.calculate_start_node()
-    cpm.forward_pass_of_the_network()
-    
-    cpm.find_descendants_of_node()
-    cpm.backward_pass_of_the_network()
-    
-    cpm.calculate_slack_time_of_the_nodes()
-    cpm.mark_critical_nodes_in_network()
-    cpm.print_node_matrix()
 
-    result = []
+    cpm = CPM()
+    cpm.find_all_activity_informations(input_file)
     node_matrix = cpm.get_node_matrix()
-    if method.strip() == "Estimated":
-        # ==== Estimated Method ===== #
-        estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
-        result = estimatedSmoothing.estimate_optimal_schedule()
-    else:
-        # ==== Burgess Procedure ===== #
-        # node_matrix = cpm.get_node_matrix()
-        burgessProcedure = BurgessProcedure(node_matrix)
-        result = burgessProcedure.estimate_optimal_schedule()
+    
+    result = []
+    # ==== Estimated Method ===== #
+    estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
+    result = estimatedSmoothing.estimate_optimal_schedule()
+
+    # ==== Burgess Procedure ===== #
+    # burgessProcedure = BurgessProcedure(node_matrix)
+    # result = burgessProcedure.estimate_optimal_schedule()
     # return result
 
 
@@ -65,6 +54,5 @@ if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
     # app.run(threaded=True, port=5000)
     method = input()
-    method = method.split(",")
-    main(method[0].strip(), method[1].strip())
-    # main("Estimated")
+    main(method.strip())
+    
