@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Resource loading Assignment</title>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}"> 
+		<script src="{{ url_for('static', filename='index.js') }}"> </script>
+		<script src="{{ url_for('static', filename='gantt-chart.js') }}"> </script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	</head>
+
+	<body>
+		<div id="Content">
+			<div id="header">
+				<h1 style="align-content: center;"><b> Resource Smoothing </b></h1>
+				<label for="file-upload" class="custom-file-upload" style="display: inline-block;">
+					<h3>  Choose input file (csv/txt) </h3> 
+				</label>
+				<input id="inputFile" type="file" accept=".csv, text/plain"/>
+				<button onclick="uploadDataset()"> Submit Dataset </button>
+				<br>
+				<label style="display: inline-block;"> <h3> Choose Resource Smoothing method: </h3> </label>
+				<input type="radio" id="Burgess" name="method" value="Burgess">
+				<label for="Burgess"> Burgess Method </label>
+				<input type="radio" id="Estimated" name="method" value="Estimated" checked="checked">
+				<label for="Estimated"> Estimated Method </label>				  
+			</div>
+			<div> <br> </div>
+			<div id="mainContent">	
+			<!-- <h1> Hello </h1> -->
+				<br>
+			</div>
+		</div>	
+	
+	</body>
+
+</html>
