@@ -1,1 +1,6 @@
 test.py
+.venv
+venv
+__pycache__
+.vscode
+debug.log
