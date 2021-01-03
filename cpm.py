@@ -2,6 +2,11 @@ node_matrix = []
 id_name_pair = []
 
 class CPM:
+    def __init__(self):
+        global id_name_pair, node_matrix
+        node_matrix = []
+        id_name_pair = []
+
 
     def get_node_matrix(self):
         return node_matrix
@@ -13,14 +18,15 @@ class CPM:
         fp = open(filename, 'r')
 
         for line in fp.readlines():
-            comma_splitted_line = line.split(',')
+            comma_splitted_line = line.split(sep=",", maxsplit=1)   # e.g. ["A", "B,C,2,3"]
+            predecessor, duration, resource = comma_splitted_line[1].rsplit(sep=",", maxsplit=2)    # ["B,C", "2", "3"]
 
             node = {}
             node['id'] = node_counter 
             node['name'] = comma_splitted_line[0]
-            node['predecessor'] = comma_splitted_line[1].strip().split(';')
-            node['duration'] = comma_splitted_line[2].strip()
-            node['resource'] = comma_splitted_line[3].strip()
+            node['predecessor'] = predecessor.strip().split(',')
+            node['duration'] = duration.strip()
+            node['resource'] = resource.strip()
             node['descendant'] = []
             node['slack'] = 0
             node['critical'] = False
@@ -59,7 +65,7 @@ class CPM:
         for predecessor in predecessors:
             for node in node_matrix:
                 if node['name'] == predecessor and node['FP'] is True:
-                    predecessor_ef_values.append(node['EF'])
+                    predecessor_ef_values.append(int(node['EF']))
         
         return max(predecessor_ef_values)
 
@@ -67,9 +73,9 @@ class CPM:
     def calculate_start_node(self):
         global node_matrix
         for node in node_matrix:
-            if node['predecessor'] == ['']:
+            if node['predecessor'] == ['-']:
                 node['ES'] = 0
-                node['EF'] = node['duration']
+                node['EF'] = int(node['duration'])
                 node['FP'] = True
                 # print(node)
         
@@ -108,7 +114,6 @@ class CPM:
 
     def check_if_bp_is_true_for_all_descendants(self, descendants):
         global node_matrix
-
         for descendant in descendants:
             for node in node_matrix: 
                 if descendant == node['name'] and node['BP'] is False:
@@ -122,7 +127,7 @@ class CPM:
         for descendant in descendants:
             for node in node_matrix:
                 if descendant == node['name'] and node['BP'] is True:
-                    descendant_ls_values.append(node['LS'])
+                    descendant_ls_values.append(int(node['LS']))
         
         # print(descendant_ls_values)
         return min(descendant_ls_values)
@@ -170,7 +175,20 @@ class CPM:
     def mark_critical_nodes_in_network(self):
         global node_matrix
         for node in node_matrix:
-
             if node['slack'] == 0:
                 node['critical'] = True
 
+
+    def find_all_activity_informations(self, input_file):
+        self.get_data_from_input_file(input_file)
+    
+        self.calculate_start_node()
+        self.forward_pass_of_the_network()
+        
+        self.find_descendants_of_node()
+        self.backward_pass_of_the_network()
+        
+        self.calculate_slack_time_of_the_nodes()
+        self.mark_critical_nodes_in_network()
+        self.print_node_matrix()
+        # node_matrix = self.get_node_matrix()

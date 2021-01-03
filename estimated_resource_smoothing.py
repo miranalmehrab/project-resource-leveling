@@ -122,7 +122,7 @@ class EstimatedResourceSmoothing:
                 pos_in_combination_and_node_matrix_ind_mapping[len(combinations)] = index
                 node_name_and_pos_in_combination_map[node["name"]] = len(combinations)
                 combinations.append(schedule_options_for_this_node)
-        # print("Slack options for non-critical activities:\n", combinations)
+        # print("== Slack options for non-critical activities ==\n", combinations)
         combinations = list(itertools.product(*combinations))
         combinations = self.check_for_valid_combinations(combinations, 
                         node_name_and_pos_in_combination_map, pos_in_combination_and_node_matrix_ind_mapping)     
@@ -150,7 +150,7 @@ class EstimatedResourceSmoothing:
         optimal_total_R = int(self.optimal_total_R)
         optimal_total_R_square = int(self.optimal_total_R_square)
         # print(optimal_total_R_square)
-        self.print_estimate_schedule_details()
+        # self.print_estimate_schedule_details()
         return {"node_matrix": node_matrix , "R_by_time": R_by_time, "R2_by_time": R2_by_time, 
                     "optimal_total_R": optimal_total_R, "optimal_total_R_square": optimal_total_R_square}
         
