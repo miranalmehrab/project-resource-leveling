@@ -15,13 +15,12 @@ app.config['UPLOAD_FOLDER'] = "dataset"
 def post_dataset():
     if request.method == "POST":
         _file = request.files['file']
-        # selected_method = request.form['method']
-        # print(selected_method, _file)
         if _file.filename != '':
-            _file.save(os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
-        result = main(os.path.join(app.config['UPLOAD_FOLDER'], _file.filename))
+            _file.save( os.path.join(app.config['UPLOAD_FOLDER'], _file.filename) )
+        result = main( os.path.join(app.config['UPLOAD_FOLDER'], _file.filename) )
         # print(result)
-        return json.dumps(result)
+        response = { "estimated": result }
+        return json.dumps(response)
 
 
 # A welcome message to test our server
@@ -34,13 +33,15 @@ def index():
 def main(filepath):
     # input_file = 'input1.csv'
     input_file = filepath
+    cpm = None
+    node_matrix = None
+    result = []
 
     cpm = CPM()
     cpm.find_all_activity_informations(input_file)
     node_matrix = cpm.get_node_matrix()
-    print(node_matrix)
+    # print(node_matrix)
     
-    result = []
     # ==== Estimated Method ===== #
     estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
     result = estimatedSmoothing.estimate_optimal_schedule()
@@ -48,12 +49,13 @@ def main(filepath):
     # ==== Burgess Procedure ===== #
     # burgessProcedure = BurgessProcedure(node_matrix)
     # result = burgessProcedure.estimate_optimal_schedule()
-    # return result
+    return result
 
 
 if __name__ == "__main__":
     # Threaded option to enable multiple instances for multiple user access support
-    # app.run(threaded=True, port=5000)
-    method = input()
-    main(method.strip())
+    app.run(threaded=True, port=5000)
+    
+    # method = input()
+    # main(method.strip())
     

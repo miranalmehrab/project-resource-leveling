@@ -2,6 +2,11 @@ node_matrix = []
 id_name_pair = []
 
 class CPM:
+    def __init__(self):
+        global id_name_pair, node_matrix
+        node_matrix = []
+        id_name_pair = []
+
 
     def get_node_matrix(self):
         return node_matrix
@@ -60,7 +65,7 @@ class CPM:
         for predecessor in predecessors:
             for node in node_matrix:
                 if node['name'] == predecessor and node['FP'] is True:
-                    predecessor_ef_values.append(node['EF'])
+                    predecessor_ef_values.append(int(node['EF']))
         
         return max(predecessor_ef_values)
 
@@ -70,7 +75,7 @@ class CPM:
         for node in node_matrix:
             if node['predecessor'] == ['-']:
                 node['ES'] = 0
-                node['EF'] = node['duration']
+                node['EF'] = int(node['duration'])
                 node['FP'] = True
                 # print(node)
         
@@ -109,7 +114,6 @@ class CPM:
 
     def check_if_bp_is_true_for_all_descendants(self, descendants):
         global node_matrix
-
         for descendant in descendants:
             for node in node_matrix: 
                 if descendant == node['name'] and node['BP'] is False:
@@ -123,7 +127,7 @@ class CPM:
         for descendant in descendants:
             for node in node_matrix:
                 if descendant == node['name'] and node['BP'] is True:
-                    descendant_ls_values.append(node['LS'])
+                    descendant_ls_values.append(int(node['LS']))
         
         # print(descendant_ls_values)
         return min(descendant_ls_values)
@@ -171,7 +175,6 @@ class CPM:
     def mark_critical_nodes_in_network(self):
         global node_matrix
         for node in node_matrix:
-
             if node['slack'] == 0:
                 node['critical'] = True
 
