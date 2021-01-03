@@ -12,6 +12,8 @@ Project Resource Smoothing
     - A.N. Tanvir
     - Miran Al Mehrab
     - Fahmid Ahmed
+    - Laila Afroz Labonno
+    - Muhabbat Sarkar Eshan
 
 
 ### Follow "instruction.txt" for making input dataset
