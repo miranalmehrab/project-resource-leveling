@@ -1,4 +1,6 @@
 test.py
 .venv
-__pycache__
 venv
+__pycache__
+.vscode
+debug.log
