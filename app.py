@@ -40,7 +40,6 @@ def main(method):
     cpm.print_node_matrix()
 
     # ==== Estimated Method ===== #
-<<<<<<< HEAD
     # node_matrix = cpm.get_node_matrix()
     # estimatedSmoothing = EstimatedResourceSmoothing(node_matrix)
     # estimatedSmoothing.estimate_optimal_schedule()
@@ -49,7 +48,6 @@ def main(method):
     node_matrix = cpm.get_node_matrix()
     burgessProcedure = BurgessProcedure(node_matrix)
     burgessProcedure.estimate_optimal_schedule()
-=======
     result = []
     if method.strip() == "Estimated":
         node_matrix = cpm.get_node_matrix()
@@ -59,9 +57,8 @@ def main(method):
         ""
     return result
 
->>>>>>> d2b87c0fd879685fdca180b2ab6ae0ffd44bdad3
 
 if __name__ == "__main__":
-    # Threaded option to enable multiple instances for multiple user access support
+    Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
-    # main("Estimated")
+    main("Estimated")
